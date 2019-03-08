@@ -168,6 +168,7 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 			IFS=';' read -ra ADB <<< "$MYSQL_DATABASE"
 			
 			for MDB in "${ADB[@]}"; do
+				#echo "CREATE DATABASE IF NOT EXISTS \`$MDB\` ;"
 				echo "CREATE DATABASE IF NOT EXISTS \`$MDB\` ;" | "${mysql[@]}"
 				#mysql+=( "$MDB" )
 			done
@@ -181,15 +182,19 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 			
 			for i in "${!AUSER[@]}"; do
 				if [[ -v "APASS[$i]" ]]; then
+					#echo "CREATE USER '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[$i]}' ;"
 					echo "CREATE USER '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[$i]}' ;" | "${mysql[@]}"
 				else
+					#echo "CREATE USER '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[0]}' ;"
 					echo "CREATE USER '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[0]}' ;" | "${mysql[@]}"
 				fi
 				
 				if [ "$MYSQL_DATABASE" ]; then
 					if [[ -v "ADB[$i]" ]]; then
+						#echo "GRANT ALL ON \`${ADB[$i]}\`.* TO '${AUSER[$i]}'@'%' ;"
 						echo "GRANT ALL ON \`${ADB[$i]}\`.* TO '${AUSER[$i]}'@'%' ;" | "${mysql[@]}"
 					else
+						#echo "GRANT ALL ON \`${ADB[0]}\`.* TO '${AUSER[$i]}'@'%' ;"
 						echo "GRANT ALL ON \`${ADB[0]}\`.* TO '${AUSER[$i]}'@'%' ;" | "${mysql[@]}"
 					fi
 				fi
