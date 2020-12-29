@@ -158,11 +158,16 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 			mysql+=( -p"${MYSQL_ROOT_PASSWORD}" )
 		fi
 
+    file_env 'TZ'
 		file_env 'MYSQL_DATABASE'
 		file_env 'MYSQL_USER'
 		file_env 'MYSQL_PASSWORD'
 		
-		
+#    if [ "$TZ" ]; then
+#      echo "SET GLOBAL time_zone = $TZ;" | "${mysql[@]}"
+#      echo "SET time_zone = $TZ;" | "${mysql[@]}"
+#		fi
+
 		if [ "$MYSQL_DATABASE" ]; then
 			multiDB=$([[ "$MYSQL_DATABASE" == *";"* ]] && echo "1" || echo "0")
 			IFS=';' read -ra ADB <<< "$MYSQL_DATABASE"
@@ -182,11 +187,11 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 			
 			for i in "${!AUSER[@]}"; do
 				if [[ -v "APASS[$i]" ]]; then
-					#echo "CREATE USER '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[$i]}' ;"
-					echo "CREATE USER '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[$i]}' ;" | "${mysql[@]}"
+					#echo "CREATE USER IF NOT EXISTS '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[$i]}' ;"
+					echo "CREATE USER IF NOT EXISTS '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[$i]}' ;" | "${mysql[@]}"
 				else
-					#echo "CREATE USER '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[0]}' ;"
-					echo "CREATE USER '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[0]}' ;" | "${mysql[@]}"
+					#echo "CREATE USER IF NOT EXISTS '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[0]}' ;"
+					echo "CREATE USER IF NOT EXISTS '${AUSER[$i]}'@'%' IDENTIFIED BY '${APASS[0]}' ;" | "${mysql[@]}"
 				fi
 				
 				if [ "$MYSQL_DATABASE" ]; then

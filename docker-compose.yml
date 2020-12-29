@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  mariadb:
+    image: "ganjaaa/mariadb:10.5.8"
+    restart: "always"
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: myroot
+      MYSQL_USER: user1;user1;user2
+      MYSQL_PASSWORD: pass1;pass1;pass2
+      MYSQL_DATABASE: db1;db2;db2
+    networks:
+      - db
+  adminer:
+    image: adminer:latest
+    ports:
+      - "1337:8080"
+    networks:
+      - db
+
+networks:
+  db:
