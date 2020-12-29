@@ -1,4 +1,4 @@
-FROM mariadb:10.3
+FROM mariadb:10.5.8
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN rm -rf /docker-entrypoint.sh \
